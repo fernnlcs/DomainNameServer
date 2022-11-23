@@ -1,8 +1,9 @@
 package main.utils;
 
+import main.contracts.Identifiable;
 import main.contracts.utils.NameAddressable;
 
-public class URI implements NameAddressable {
+public class URI implements NameAddressable, Identifiable {
     private String subdomain;
     private String topLevelDomain;
     private String[] secondLevelDomains;
@@ -112,6 +113,16 @@ public class URI implements NameAddressable {
 
     @Override
     public String toString() {
+        return this.getFull();
+    }
+
+    @Override
+    public int getHash() {
+        return Math.abs(this.getFull().hashCode());
+    }
+
+    @Override
+    public String getIdentifier() {
         return this.getFull();
     }
 }
