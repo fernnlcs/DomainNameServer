@@ -7,6 +7,6 @@ public class App {
     public static void main(String[] args) throws Exception {
         Logger logger = new Logger();
         DNSSimulator simulator = new DNSSimulator(logger);
-        simulator.interact(new Scanner(System.in));
+        simulator.run(new Scanner(System.in));
     }
 }
