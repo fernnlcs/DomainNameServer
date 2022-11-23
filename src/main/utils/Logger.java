@@ -2,12 +2,13 @@ package main.utils;
 
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.concurrent.Callable;
 
 public class Logger {
 
     private final Queue<String> messages = new LinkedList<>();
-    private boolean isLocked = false;
-    private boolean isWaiting = false;
+    private int waitingTasks = 0;
+    private boolean isWaitingToReport = false;
 
     public Logger() {
     }
@@ -33,8 +34,8 @@ public class Logger {
     }
 
     public void report() {
-        if (this.isLocked) {
-            this.isWaiting = true;
+        if (this.isLocked()) {
+            this.isWaitingToReport = true;
         } else {
             printReport();
         }
@@ -48,13 +49,17 @@ public class Logger {
         return this.size() == 0;
     }
 
+    public boolean isLocked() {
+        return this.waitingTasks > 0;
+    }
+
     public void lock() {
-        this.isLocked = true;
+        this.waitingTasks++;
     }
 
     public void unlock() {
-        this.isLocked = false;
-        if (this.isWaiting) {
+        this.waitingTasks--;
+        if (!this.isLocked() && this.isWaitingToReport) {
             this.report();
         }
     }
@@ -69,5 +74,17 @@ public class Logger {
         }
 
         this.unlock();
+    }
+    public Object waitFor(Callable<Object> callable) {
+        this.lock();
+
+        try {
+            Object result =  callable.call();
+            this.unlock();
+            return result;
+        } catch (Exception e) {
+            this.unlock();
+            throw new RuntimeException(e);
+        }
     }
 }

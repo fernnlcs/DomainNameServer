@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class LoggerTest {
     @Test
@@ -56,7 +58,49 @@ public class LoggerTest {
         logger.report();
 
         // Gerar relatório vazio (apenas o rótulo de tempo, sem mensagens)
-        Assertions.assertThat(outContent.toString()).isEqualTo("");
+        Assertions.assertThat(outContent.toString()).isEqualTo("\n");
+
+        // Fechar a captura
+        System.setOut(originalOut);
+    }
+
+    @Test
+    void waitFor() {
+        // Capturar a saída do console
+        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+        PrintStream originalOut = System.out;
+        System.setOut(new PrintStream(outContent));
+
+        Logger logger = new Logger();
+        Timer timer = new Timer();
+
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                logger.log("Exemplo de mensagem.");
+                logger.report();
+            }
+        }, 100, 100);
+
+        logger.waitFor(() -> System.out.print("#"));
+        String firstOutput = (String) logger.waitFor(() -> {
+            try {
+                Thread.sleep(300);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            timer.cancel();
+            return outContent.toString();
+        });
+        Assertions.assertThat(firstOutput).isEqualTo("#");
+
+        try {
+            Thread.sleep(300);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        Assertions.assertThat(outContent.toString()).contains("> Exemplo de mensagem.");
 
         // Fechar a captura
         System.setOut(originalOut);
