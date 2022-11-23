@@ -6,6 +6,8 @@ import java.util.Queue;
 public class Logger {
 
     private final Queue<String> messages = new LinkedList<>();
+    private boolean isLocked = false;
+    private boolean isWaiting = false;
 
     public Logger() {
     }
@@ -26,8 +28,16 @@ public class Logger {
         return result.toString();
     }
 
+    private void printReport() {
+        System.out.print("\n" + this.getReport());
+    }
+
     public void report() {
-        System.out.print(this.getReport());
+        if (this.isLocked) {
+            this.isWaiting = true;
+        } else {
+            printReport();
+        }
     }
 
     public int size() {
@@ -36,5 +46,28 @@ public class Logger {
 
     public boolean isEmpty() {
         return this.size() == 0;
+    }
+
+    public void lock() {
+        this.isLocked = true;
+    }
+
+    public void unlock() {
+        this.isLocked = false;
+        if (this.isWaiting) {
+            this.report();
+        }
+    }
+
+    public void waitFor(Runnable runnable) {
+        this.lock();
+
+        try {
+            runnable.run();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        this.unlock();
     }
 }
