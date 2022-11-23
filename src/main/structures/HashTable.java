@@ -8,7 +8,7 @@ import java.util.NoSuchElementException;
 
 public class HashTable<Key extends Identifiable, Value> {
 
-    private class Node {
+    public class Node {
         private final Key key;
         private Value value;
         private int frequency = 0;
@@ -34,6 +34,10 @@ public class HashTable<Key extends Identifiable, Value> {
 
         public int getFrequency() {
             return frequency;
+        }
+
+        public String toString() {
+            return this.key.toString();
         }
     }
 
@@ -188,5 +192,9 @@ public class HashTable<Key extends Identifiable, Value> {
 
         // Ajustar tabela, se necessário
         this.adjustIfNecessary();
+    }
+
+    public LinkedList<Node> getPage(int index) {
+        return this.table.getPage(index);
     }
 }

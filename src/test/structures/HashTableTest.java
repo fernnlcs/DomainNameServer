@@ -1,5 +1,7 @@
 package test.structures;
 
+import main.factories.utils.IPv4Factory;
+import main.factories.utils.URIFactory;
 import main.structures.HashTable;
 import main.utils.IPv4Address;
 import main.utils.URI;
@@ -27,7 +29,7 @@ public class HashTableTest {
         HashTable<URI, IPv4Address> table = new HashTable<>();
 
         for (int i = 0; i < quantity; i++) {
-            table.add(uriExample(i), ipExample(i));
+            table.add(URIFactory.next(), IPv4Factory.next());
         }
 
         Assertions.assertThat(table.getQuantityOfElements()).isEqualTo(quantity);
@@ -40,7 +42,7 @@ public class HashTableTest {
         HashTable<URI, IPv4Address> table = new HashTable<>();
 
         for (int i = 0; i < quantity; i++) {
-            table.add(uriExample(i), ipExample(i));
+            table.add(URIFactory.next(), IPv4Factory.next());
         }
 
         Assertions.assertThat(table.getQuantityOfElements()).isEqualTo(quantity);
@@ -55,7 +57,7 @@ public class HashTableTest {
         HashTable<URI, IPv4Address> table = new HashTable<>();
 
         for (int i = 0; i < quantity; i++) {
-            table.add(uriExample(i), ipExample(i));
+            table.add(URIFactory.next(), IPv4Factory.next());
         }
 
         Assertions.assertThat(table.getQuantityOfElements()).isEqualTo(quantity);
@@ -70,7 +72,7 @@ public class HashTableTest {
         HashTable<URI, IPv4Address> table = new HashTable<>();
 
         for (int i = 0; i < quantity; i++) {
-            table.add(uriExample(i), ipExample(i));
+            table.add(URIFactory.next(), IPv4Factory.next());
         }
 
         Assertions.assertThat(table.getQuantityOfElements()).isEqualTo(quantity);
@@ -85,7 +87,7 @@ public class HashTableTest {
         HashTable<URI, IPv4Address> table = new HashTable<>();
 
         for (int i = 0; i < quantity; i++) {
-            table.add(uriExample(i), ipExample(i));
+            table.add(URIFactory.next(), IPv4Factory.next());
         }
 
         Assertions.assertThat(table.getQuantityOfElements()).isEqualTo(quantity);
@@ -100,7 +102,7 @@ public class HashTableTest {
         HashTable<URI, IPv4Address> table = new HashTable<>();
 
         for (int i = 0; i < quantity; i++) {
-            table.add(uriExample(i), ipExample(i));
+            table.add(URIFactory.next(), IPv4Factory.next());
         }
 
         Assertions.assertThat(table.getQuantityOfElements()).isEqualTo(quantity);
@@ -115,7 +117,7 @@ public class HashTableTest {
         HashTable<URI, IPv4Address> table = new HashTable<>();
 
         for (int i = 0; i < quantity; i++) {
-            table.add(uriExample(i), ipExample(i));
+            table.add(URIFactory.next(), IPv4Factory.next());
         }
 
         Assertions.assertThat(table.getQuantityOfElements()).isEqualTo(quantity);
@@ -130,7 +132,7 @@ public class HashTableTest {
         HashTable<URI, IPv4Address> table = new HashTable<>();
 
         for (int i = 0; i < quantity; i++) {
-            table.add(uriExample(i), ipExample(i));
+            table.add(URIFactory.next(), IPv4Factory.next());
         }
 
         Assertions.assertThat(table.getQuantityOfElements()).isEqualTo(quantity);
@@ -145,7 +147,7 @@ public class HashTableTest {
         HashTable<URI, IPv4Address> table = new HashTable<>();
 
         for (int i = 0; i < quantity; i++) {
-            table.add(uriExample(i), ipExample(i));
+            table.add(URIFactory.next(), IPv4Factory.next());
         }
 
         Assertions.assertThat(table.getQuantityOfElements()).isEqualTo(quantity);
@@ -160,7 +162,7 @@ public class HashTableTest {
         HashTable<URI, IPv4Address> table = new HashTable<>();
 
         for (int i = 0; i < quantity; i++) {
-            table.add(uriExample(i), ipExample(i));
+            table.add(URIFactory.next(), IPv4Factory.next());
         }
 
         Assertions.assertThat(table.getQuantityOfElements()).isEqualTo(quantity);
@@ -173,11 +175,11 @@ public class HashTableTest {
     void update() {
         HashTable<URI, IPv4Address> table = new HashTable<>();
 
-        table.add(uriExample(0), ipExample(0));
-        Assertions.assertThat(table.find(uriExample(0)).toString()).isEqualTo(ipExample(0).toString());
+        table.add(URIFactory.from(0), IPv4Factory.from(0));
+        Assertions.assertThat(table.find(URIFactory.from(0)).toString()).isEqualTo(IPv4Factory.from(0).toString());
 
-        table.add(uriExample(0), ipExample(1));
-        Assertions.assertThat(table.find(uriExample(0)).toString()).isEqualTo(ipExample(1).toString());
+        table.add(URIFactory.from(0), IPv4Factory.from(1));
+        Assertions.assertThat(table.find(URIFactory.from(0)).toString()).isEqualTo(IPv4Factory.from(1).toString());
     }
 
     @Test
@@ -186,7 +188,7 @@ public class HashTableTest {
         HashTable<URI, IPv4Address> table = new HashTable<>();
 
         for (int i = 0; i < quantity; i++) {
-            table.add(uriExample(i), ipExample(i));
+            table.add(URIFactory.from(i), IPv4Factory.from(i));
         }
 
         Assertions.assertThat(table.getQuantityOfElements()).isEqualTo(quantity);
@@ -194,8 +196,8 @@ public class HashTableTest {
                 .isGreaterThanOrEqualTo(HashTable.MIN_ELEMENTS_PER_TABLE_ROW)
                 .isLessThanOrEqualTo(HashTable.MAX_ELEMENTS_PER_TABLE_ROW);
 
-        table.remove(uriExample(7));
-        table.remove(uriExample(4));
+        table.remove(URIFactory.from(7));
+        table.remove(URIFactory.from(4));
 
         Assertions.assertThat(table.getQuantityOfElements()).isEqualTo(quantity - 2);
         Assertions.assertThat(table.getElementsPerTableRow())
@@ -203,17 +205,4 @@ public class HashTableTest {
                 .isLessThanOrEqualTo(HashTable.MAX_ELEMENTS_PER_TABLE_ROW);
     }
 
-    static URI uriExample(int index) {
-        return new URI("www.site" + index + ".com");
-    }
-
-    static IPv4Address ipExample(int index) {
-        String[] parts = new String[]{
-                String.valueOf(index % 256),
-                String.valueOf((index + 1) % 256),
-                String.valueOf((index + 2) % 256),
-                String.valueOf((index + 3) % 256),
-        };
-        return new IPv4Address(String.join(".", parts));
-    }
 }
